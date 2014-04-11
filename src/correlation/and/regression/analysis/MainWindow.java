@@ -6,11 +6,20 @@
 
 package correlation.and.regression.analysis;
 
+import java.awt.Color;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
 
 /**
  *
@@ -39,6 +48,8 @@ public class MainWindow extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jPnlChart = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTblStatistic = new javax.swing.JTable();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -67,20 +78,42 @@ public class MainWindow extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jPnlChart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 102, Short.MAX_VALUE))
+                .addGap(0, 126, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("tab1", jPanel1);
+
+        modelStatistic = new DefaultTableModel(
+            new Object [][] {
+                {"Mean", "Mark", null, null},
+                {"", "Interval", null, null},
+                {"Mean square", "Mark", null, null},
+                {"", "Interval", null, null},
+                {"Coefficient asymmetry", "Mark", null, null},
+                {"", "Interval", null, null},
+                {"Coefficient excess", "Mark", null, null},
+                {"", "Interval", null, null}
+            },
+            new String [] {
+                "", "", "X", "Y"
+            }
+        );
+        jTblStatistic.setModel(modelStatistic);
+        jScrollPane1.setViewportView(jTblStatistic);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 395, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 20, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 251, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 153, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("tab2", jPanel2);
@@ -129,6 +162,8 @@ public class MainWindow extends javax.swing.JFrame {
                     arr[1]=new OrderedSeries();
                     arr[1].loadFromFile(jFileChooser1.getSelectedFile().getPath());
                     showCorrelationField();
+                    jTblStatistic.setModel(arr[0].showStatisticsForLab4(modelStatistic, 0.01));
+                    jTblStatistic.setModel(arr[1].showStatisticsForLab4(modelStatistic, 0.01));
                 }else{
                     arr[0]=null;
                     arr[1]=null;
@@ -178,6 +213,8 @@ public class MainWindow extends javax.swing.JFrame {
     }
 
     OrderedSeries[] arr = new OrderedSeries[2];
+    JFreeChart chart;
+    DefaultTableModel modelStatistic;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JFileChooser jFileChooser1;
     private javax.swing.JMenu jMenu1;
@@ -187,7 +224,9 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPnlChart;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTable jTblStatistic;
     // End of variables declaration//GEN-END:variables
 
     private void clearAll() {
@@ -195,12 +234,26 @@ public class MainWindow extends javax.swing.JFrame {
     }
 
     private void showCorrelationField() {
-         chart = classes.createHistogram();
+        XYSeriesCollection dataset = new XYSeriesCollection();
+        
+         for(int i=0; i<arr[0].countOfNumbers; i++){
+             XYSeries tmp = new XYSeries(""+i);
+             tmp.add(arr[0].getNumber(i), arr[1].getNumber(i));
+             tmp.add(arr[0].getNumber(i), arr[1].getNumber(i));
+             dataset.addSeries(tmp);
+         }       
+        JFreeChart chart = ChartFactory.createXYLineChart("Relation", "X", "Y", dataset, PlotOrientation.VERTICAL, false, false, false);
+        XYPlot plot = chart.getXYPlot();
+        XYLineAndShapeRenderer renderer = (XYLineAndShapeRenderer) plot.getRenderer();
+        for(int i=0;i<arr[0].countOfNumbers;i++)
+            renderer.setSeriesPaint(i, Color.BLUE);
+        plot.setBackgroundPaint(Color.WHITE);
+        plot.setRangeGridlinePaint(Color.LIGHT_GRAY);
             ChartPanel ChP = new ChartPanel(chart);
-            ChP.setSize(jpnHistogram.getWidth(), jpnHistogram.getHeight());
-            jpnHistogram.removeAll();
-	    jpnHistogram.revalidate();
-	    jpnHistogram.add(ChP);
-	    jpnHistogram.repaint();
+            ChP.setSize(jPnlChart.getWidth(), jPnlChart.getHeight());
+            jPnlChart.removeAll();
+	    jPnlChart.revalidate();
+	    jPnlChart.add(ChP);
+	    jPnlChart.repaint();
     }
 }

@@ -124,7 +124,7 @@ public class OrderedSeries {
         return result;
     }
     
-     public JFreeChart createStatFunkDensity(float a, float b){
+    public JFreeChart createStatFunkDensity(float a, float b){
         XYSeriesCollection dataset = new XYSeriesCollection();
         int t=0;
          XYSeries tmp = new XYSeries("1");
@@ -153,7 +153,7 @@ public class OrderedSeries {
         return chart;
     }
      
-      public JFreeChart createStatFunkDestrib(float a, float b){
+    public JFreeChart createStatFunkDestrib(float a, float b){
         XYSeriesCollection dataset = new XYSeriesCollection();
          XYSeries tmp = new XYSeries("1");
         for(Count c : data){
@@ -215,9 +215,9 @@ public class OrderedSeries {
                 
             }
         }
-        sort(0,data.size()-1);
-        relatFreg();
-        emprDistrib();
+        //sort(0,data.size()-1);
+        //relatFreg();
+        //emprDistrib();
     }
     
     public void loadFromArray(double[] arr) {
@@ -389,6 +389,33 @@ public class OrderedSeries {
         tm.setValueAt(""+f.format(confidenceIntervalMin(variationCoefficient(mean), meanSquareDeviationVariation(mean), alpha))+" : "+f.format(confidenceIntervalMax(variationCoefficient(mean), meanSquareDeviationVariation(mean), alpha)), 6, 3);
         return tm;
     }
+    
+     public DefaultTableModel showStatisticsForLab4(DefaultTableModel tm, double alpha){
+        NumberFormat f = NumberFormat.getInstance();
+        f.setGroupingUsed(false);
+        if(tm.getValueAt(0, 2)==null){
+            double mean = mean();
+            tm.setValueAt(f.format(mean), 0, 2);
+            tm.setValueAt(""+f.format(confidenceIntervalMin(mean, meanSquareDeviationArithm(mean), alpha))+" : "+f.format(confidenceIntervalMax(mean, meanSquareDeviationArithm(mean), alpha)), 1, 2);
+            tm.setValueAt(f.format(meanSquare(mean)), 2, 2);
+            tm.setValueAt(""+f.format(confidenceIntervalMin(meanSquare(mean), meanSquareDeviationSquare(mean), alpha))+" : "+f.format(confidenceIntervalMax(meanSquare(mean), meanSquareDeviationSquare(mean), alpha)), 3, 2);
+            tm.setValueAt(f.format(asymmetryCoefficient(mean)), 4, 2);
+            tm.setValueAt(""+f.format(confidenceIntervalMin(asymmetryCoefficient(mean), meanSquareDeviationAsymmetry(), alpha))+" : "+f.format(confidenceIntervalMax(asymmetryCoefficient(mean), meanSquareDeviationAsymmetry(), alpha)), 5, 2);
+            tm.setValueAt(f.format(ekstsessaCoefficient(mean)), 6, 2);
+            tm.setValueAt(""+f.format(confidenceIntervalMin(ekstsessaCoefficient(mean), meanSquareDeviationEkstsessa(), alpha))+" : "+f.format(confidenceIntervalMax(ekstsessaCoefficient(mean), meanSquareDeviationEkstsessa(), alpha)), 7, 2);
+        }else{
+            double mean = mean();
+            tm.setValueAt(f.format(mean), 0, 3);
+            tm.setValueAt(""+f.format(confidenceIntervalMin(mean, meanSquareDeviationArithm(mean), alpha))+" : "+f.format(confidenceIntervalMax(mean, meanSquareDeviationArithm(mean), alpha)), 1, 3);
+            tm.setValueAt(f.format(meanSquare(mean)), 2, 3);
+            tm.setValueAt(""+f.format(confidenceIntervalMin(meanSquare(mean), meanSquareDeviationSquare(mean), alpha))+" : "+f.format(confidenceIntervalMax(meanSquare(mean), meanSquareDeviationSquare(mean), alpha)), 3, 3);
+            tm.setValueAt(f.format(asymmetryCoefficient(mean)), 4, 3);
+            tm.setValueAt(""+f.format(confidenceIntervalMin(asymmetryCoefficient(mean), meanSquareDeviationAsymmetry(), alpha))+" : "+f.format(confidenceIntervalMax(asymmetryCoefficient(mean), meanSquareDeviationAsymmetry(), alpha)), 5, 3);
+            tm.setValueAt(f.format(ekstsessaCoefficient(mean)), 6, 3);
+            tm.setValueAt(""+f.format(confidenceIntervalMin(ekstsessaCoefficient(mean), meanSquareDeviationEkstsessa(), alpha))+" : "+f.format(confidenceIntervalMax(ekstsessaCoefficient(mean), meanSquareDeviationEkstsessa(), alpha)), 7, 3);
+        }
+        return tm;
+    }
      
     public int deleteAnomaly(Classes cl, double gamma1, double gamma2){
         float[] range = cl.anomaly(gamma1, gamma2);
@@ -428,7 +455,7 @@ public class OrderedSeries {
         return statistic + Quantiles.GetStudentsQuantile(alpha, countOfNumbers -2) * standardDeviation;
     }
     
-    private double mean(){
+    public double mean(){
         double middle = 0;
         int i=0;
         int j=data.size()-1;
@@ -464,7 +491,7 @@ public class OrderedSeries {
         return middle/(double)countOfNumbers;
     }
     
-    private double meanSquare(double mean){
+    public double meanSquare(double mean){
         double result = 0;
         for(Count c : data){
             result+=Math.pow(c.number-mean,2)*c.count;
