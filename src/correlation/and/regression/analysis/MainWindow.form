@@ -88,7 +88,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="jPnlChart" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="0" pref="126" max="32767" attributes="0"/>
+                      <EmptySpace min="0" pref="198" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -99,7 +99,7 @@
               <Layout>
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <EmptySpace min="0" pref="395" max="32767" attributes="0"/>
+                      <EmptySpace min="0" pref="566" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
                 <DimensionLayout dim="1">
@@ -123,17 +123,26 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <Component id="jScrollPane1" min="-2" pref="375" max="-2" attributes="0"/>
-                      <EmptySpace min="0" pref="20" max="32767" attributes="0"/>
+                  <Group type="102" attributes="0">
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="jScrollPane1" pref="546" max="32767" attributes="0"/>
+                          <Component id="jScrollPane2" alignment="1" max="32767" attributes="0"/>
+                          <Component id="jScrollPane3" alignment="0" max="32767" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <Component id="jScrollPane1" min="-2" pref="122" max="-2" attributes="0"/>
-                      <EmptySpace min="0" pref="153" max="32767" attributes="0"/>
+                      <Component id="jScrollPane1" min="-2" pref="160" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="jScrollPane2" min="-2" pref="100" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="jScrollPane3" pref="64" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -154,6 +163,44 @@
                   </Properties>
                   <AuxValues>
                     <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="modelStatistic = new DefaultTableModel(&#xa;    new Object [][] {&#xa;        {&quot;Mean&quot;, &quot;Mark&quot;, null, null},&#xa;        {&quot;&quot;, &quot;Interval&quot;, null, null},&#xa;        {&quot;Mean square&quot;, &quot;Mark&quot;, null, null},&#xa;        {&quot;&quot;, &quot;Interval&quot;, null, null},&#xa;        {&quot;Coefficient asymmetry&quot;, &quot;Mark&quot;, null, null},&#xa;        {&quot;&quot;, &quot;Interval&quot;, null, null},&#xa;        {&quot;Coefficient excess&quot;, &quot;Mark&quot;, null, null},&#xa;        {&quot;&quot;, &quot;Interval&quot;, null, null}&#xa;    },&#xa;    new String [] {&#xa;        &quot;&quot;, &quot;&quot;, &quot;X&quot;, &quot;Y&quot;&#xa;    }&#xa;);"/>
+                  </AuxValues>
+                </Component>
+              </SubComponents>
+            </Container>
+            <Container class="javax.swing.JScrollPane" name="jScrollPane2">
+              <AuxValues>
+                <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
+              </AuxValues>
+
+              <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+              <SubComponents>
+                <Component class="javax.swing.JTable" name="jTable1">
+                  <Properties>
+                    <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                      <Connection code="modelCoefCorr" type="code"/>
+                    </Property>
+                  </Properties>
+                  <AuxValues>
+                    <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="modelCoefCorr = new DefaultTableModel(new Object[]{&quot;&quot;,&quot;&#x417;&#x43d;&#x430;&#x447;&#x435;&#x43d;&#x438;&#x435;&quot;,&quot;&#x421;&#x442;&#x430;&#x442;&#x438;&#x441;&#x442;&#x438;&#x43a;&#x430;&quot;,&quot;&#x41a;&#x432;&#x430;&#x43d;&#x442;&#x438;&#x43b;&#x44c;&quot;,&quot;&#x417;&#x43d;&#x430;&#x447;&#x438;&#x43c;&#x43e;&#x441;&#x442;&#x44c;&quot;,&quot;&#x414;&#x43e;&#x432;.&#x438;&#x43d;&#x442;&#x435;&#x440;&#x432;&#x430;&#x43b;&quot;}, 4);&#xa;modelCoefCorr.setValueAt(&quot;&#x41f;&#x430;&#x440;&#x43d;&#x44b;&#x439; &#x43a;&#x43e;&#x44d;&#x444;. &#x43a;&#x43e;&#x440;&#x435;&#x43b;.&quot;, 0, 0);&#xa;modelCoefCorr.setValueAt(&quot;&#x41a;&#x43e;&#x440;&#x440;&#x435;&#x43b;. &#x43e;&#x442;&#x43d;&#x43e;&#x448;&#x435;&#x43d;&#x438;&#x435;&quot;, 1, 0);&#xa;modelCoefCorr.setValueAt(&quot;-&quot;, 1, 5);&#xa;modelCoefCorr.setValueAt(&quot;&#x41a;&#x43e;&#x44d;&#x444;. &#x421;&#x43f;&#x438;&#x440;&#x43c;&#x435;&#x43d;&#x430;&quot;, 2, 0);&#xa;modelCoefCorr.setValueAt(&quot;-&quot;, 2, 5);&#xa;modelCoefCorr.setValueAt(&quot;&#x41a;&#x43e;&#x44d;&#x444;. &#x41a;&#x435;&#x43d;&#x434;&#x430;&#x43b;&#x43b;&#x430;&quot;, 3, 0);&#xa;modelCoefCorr.setValueAt(&quot;-&quot;, 3, 5);"/>
+                  </AuxValues>
+                </Component>
+              </SubComponents>
+            </Container>
+            <Container class="javax.swing.JScrollPane" name="jScrollPane3">
+              <AuxValues>
+                <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
+              </AuxValues>
+
+              <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+              <SubComponents>
+                <Component class="javax.swing.JTable" name="jTable2">
+                  <Properties>
+                    <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                      <Connection code="modelEstem" type="code"/>
+                    </Property>
+                  </Properties>
+                  <AuxValues>
+                    <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="modelEstem = new DefaultTableModel(new Object[]{&quot;&quot;, &quot;&#x417;&#x43d;&#x430;&#x447;&#x435;&#x43d;&#x438;&#x435; &#x43e;&#x446;&#x435;&#x43d;&#x43a;&#x438;&quot;, &quot;&#x414;&#x438;&#x441;&#x43f;&#x435;&#x440;&#x441;&#x438;&#x44f;&quot;, &quot;&#x421;&#x442;&#x430;&#x442;&#x438;&#x441;&#x442;&#x438;&#x43a;&#x430;&quot;, &quot;&#x41a;&#x432;&#x430;&#x43d;&#x442;&#x438;&#x43b;&#x44c;&quot;, &quot;&#x417;&#x43d;&#x430;&#x447;&#x438;&#x43c;&#x43e;&#x441;&#x442;&#x44c;&quot;, &quot;&#x414;&#x43e;&#x432;.&#x438;&#x43d;&#x442;&#x435;&#x440;&#x432;&#x430;&#x43b;&quot;}, 2);&#xa;modelEstem.setValueAt(&quot;a&quot;, 0, 0);&#xa;modelEstem.setValueAt(&quot;b&quot;, 1, 0);"/>
                   </AuxValues>
                 </Component>
               </SubComponents>

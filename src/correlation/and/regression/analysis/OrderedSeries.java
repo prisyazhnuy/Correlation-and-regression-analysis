@@ -215,6 +215,7 @@ public class OrderedSeries {
                 
             }
         }
+        System.out.println("N="+data.size());
         //sort(0,data.size()-1);
         //relatFreg();
         //emprDistrib();
@@ -239,9 +240,9 @@ public class OrderedSeries {
                 
             }
         
-        sort(0,data.size()-1);
-        relatFreg();
-        emprDistrib();
+        //sort(0,data.size()-1);
+        //relatFreg();
+        //emprDistrib();
     }
     
     public JFreeChart createGraph(){
@@ -351,10 +352,10 @@ public class OrderedSeries {
         tm.setValueAt("b", 1, 0);
         tm.setValueAt(f.format(markA()), 0, 1);
         tm.setValueAt(f.format(markB()), 1, 1);
-        tm.setValueAt(markA()-Quantiles.GetStudentsQuantile(alpha, countOfNumbers-2)*variance(markA(),markB()), 0, 2);
-        tm.setValueAt(markB()-Quantiles.GetStudentsQuantile(alpha, countOfNumbers-2)*variance(markA(),markB()), 1, 2);
-        tm.setValueAt(markA()+Quantiles.GetStudentsQuantile(alpha, countOfNumbers-2)*variance(markA(),markB()), 0, 3);
-        tm.setValueAt(markB()+Quantiles.GetStudentsQuantile(alpha, countOfNumbers-2)*variance(markA(),markB()), 1, 3);
+        tm.setValueAt(markA()-Quantiles.Student(alpha, countOfNumbers-2)*variance(markA(),markB()), 0, 2);
+        tm.setValueAt(markB()-Quantiles.Student(alpha, countOfNumbers-2)*variance(markA(),markB()), 1, 2);
+        tm.setValueAt(markA()+Quantiles.Student(alpha, countOfNumbers-2)*variance(markA(),markB()), 0, 3);
+        tm.setValueAt(markB()+Quantiles.Student(alpha, countOfNumbers-2)*variance(markA(),markB()), 1, 3);
         return tm;
     }
     
@@ -390,7 +391,7 @@ public class OrderedSeries {
         return tm;
     }
     
-     public DefaultTableModel showStatisticsForLab4(DefaultTableModel tm, double alpha){
+    public DefaultTableModel showStatisticsForLab4(DefaultTableModel tm, double alpha){
         NumberFormat f = NumberFormat.getInstance();
         f.setGroupingUsed(false);
         if(tm.getValueAt(0, 2)==null){
@@ -448,11 +449,11 @@ public class OrderedSeries {
     }
         
     private double confidenceIntervalMin(double statistic,double standardDeviation,double alpha){
-        return statistic - Quantiles.GetStudentsQuantile(alpha, countOfNumbers -2) * standardDeviation;
+        return statistic - Quantiles.Student(alpha, countOfNumbers -2) * standardDeviation;
     }
     
     private double confidenceIntervalMax(double statistic,double standardDeviation,double alpha){
-        return statistic + Quantiles.GetStudentsQuantile(alpha, countOfNumbers -2) * standardDeviation;
+        return statistic + Quantiles.Student(alpha, countOfNumbers -2) * standardDeviation;
     }
     
     public double mean(){
@@ -473,7 +474,7 @@ public class OrderedSeries {
         return middle/(double)countOfNumbers;
     }
     
-    private double meanSq(){
+    public double meanSq(){
         double middle = 0;
         int i=0;
         int j=data.size()-1;
@@ -750,7 +751,26 @@ public class OrderedSeries {
         vect.add(f.format(variationCoefficient(mean)));
         modelStatistic.addColumn(null, vect);
     }
-
+    
+    public float max(){
+        float res = data.get(0).number;
+        for(Count c : data){
+            if(c.number>res){
+                res=c.number;
+            }
+        }
+        return res;
+    }
+    
+    public float min(){
+        float res = data.get(0).number;
+        for(Count c : data){
+            if(c.number<res){
+                res=c.number;
+            }
+        }
+        return res;
+    }
     
     
 }

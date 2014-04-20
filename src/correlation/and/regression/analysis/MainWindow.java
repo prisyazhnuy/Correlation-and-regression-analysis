@@ -8,8 +8,7 @@ package correlation.and.regression.analysis;
 
 import java.awt.Color;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.text.NumberFormat;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import org.jfree.chart.ChartFactory;
@@ -50,6 +49,10 @@ public class MainWindow extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTblStatistic = new javax.swing.JTable();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jTable2 = new javax.swing.JTable();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -61,7 +64,7 @@ public class MainWindow extends javax.swing.JFrame {
         jPnlChart.setLayout(jPnlChartLayout);
         jPnlChartLayout.setHorizontalGroup(
             jPnlChartLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 395, Short.MAX_VALUE)
+            .addGap(0, 566, Short.MAX_VALUE)
         );
         jPnlChartLayout.setVerticalGroup(
             jPnlChartLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -78,7 +81,7 @@ public class MainWindow extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jPnlChart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 126, Short.MAX_VALUE))
+                .addGap(0, 198, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("tab1", jPanel1);
@@ -101,19 +104,44 @@ public class MainWindow extends javax.swing.JFrame {
         jTblStatistic.setModel(modelStatistic);
         jScrollPane1.setViewportView(jTblStatistic);
 
+        modelCoefCorr = new DefaultTableModel(new Object[]{"","Значение","Статистика","Квантиль","Значимость","Дов.интервал"}, 4);
+        modelCoefCorr.setValueAt("Парный коэф. корел.", 0, 0);
+        modelCoefCorr.setValueAt("Коррел. отношение", 1, 0);
+        modelCoefCorr.setValueAt("-", 1, 5);
+        modelCoefCorr.setValueAt("Коэф. Спирмена", 2, 0);
+        modelCoefCorr.setValueAt("-", 2, 5);
+        modelCoefCorr.setValueAt("Коэф. Кендалла", 3, 0);
+        modelCoefCorr.setValueAt("-", 3, 5);
+        jTable1.setModel(modelCoefCorr);
+        jScrollPane2.setViewportView(jTable1);
+
+        modelEstem = new DefaultTableModel(new Object[]{"", "Значение оценки", "Дисперсия", "Статистика", "Квантиль", "Значимость", "Дов.интервал"}, 2);
+        modelEstem.setValueAt("a", 0, 0);
+        modelEstem.setValueAt("b", 1, 0);
+        jTable2.setModel(modelEstem);
+        jScrollPane3.setViewportView(jTable2);
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 20, Short.MAX_VALUE))
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 546, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane3))
+                .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 153, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 64, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         jTabbedPane1.addTab("tab2", jPanel2);
@@ -151,6 +179,8 @@ public class MainWindow extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        NumberFormat f = NumberFormat.getInstance();
+        f.setGroupingUsed(false);
         try {
             if(arr[0]==null){
                 jFileChooser1.showDialog(null, "Open file");
@@ -162,8 +192,49 @@ public class MainWindow extends javax.swing.JFrame {
                     arr[1]=new OrderedSeries();
                     arr[1].loadFromFile(jFileChooser1.getSelectedFile().getPath());
                     showCorrelationField();
-                    jTblStatistic.setModel(arr[0].showStatisticsForLab4(modelStatistic, 0.01));
-                    jTblStatistic.setModel(arr[1].showStatisticsForLab4(modelStatistic, 0.01));
+                    jTblStatistic.setModel(arr[0].showStatisticsForLab4(modelStatistic, 1-0.05/2));
+                    jTblStatistic.setModel(arr[1].showStatisticsForLab4(modelStatistic, 1-0.05/2));
+                    /*Show coef correlation*/
+                    modelCoefCorr.setValueAt(f.format(StaticFunctions.pairCorrelationCoef(arr[0], arr[1])), 0, 1);
+                    modelCoefCorr.setValueAt(f.format(StaticFunctions.significancePairCor(arr[0], arr[1])), 0, 2);
+                    modelCoefCorr.setValueAt(f.format(Quantiles.Student(1-0.05/2, arr[0].size()-2)), 0, 3);
+                    if(Math.abs(StaticFunctions.significancePairCor(arr[0], arr[1]))<=Quantiles.Student(1-0.05/2, arr[0].size()-2)){
+                        modelCoefCorr.setValueAt("Не значимый", 0, 4);
+                    }else{
+                        modelCoefCorr.setValueAt("Значимый", 0, 4);
+                    }
+                    modelCoefCorr.setValueAt(StaticFunctions.getIntervalForPairCorr(StaticFunctions.pairCorrelationCoef(arr[0], arr[1]), arr[0].size()), 0, 5);
+                    modelCoefCorr.setValueAt(f.format(StaticFunctions.markCorrelationRatio(arr[0], arr[1])), 1, 1);
+                    modelCoefCorr.setValueAt(f.format(StaticFunctions.statisticsCorrelationRatio(StaticFunctions.markCorrelationRatio(arr[0], arr[1]), arr[0])), 1, 2);
+                    modelCoefCorr.setValueAt(f.format(Quantiles.Fisher(1-0.05, StaticFunctions.getK(arr[0].size())-1, arr[0].size()-StaticFunctions.getK(arr[0].size()))), 1, 3);
+                    if(StaticFunctions.statisticsCorrelationRatio(StaticFunctions.markCorrelationRatio(arr[0], arr[1]), arr[0])<=Quantiles.Fisher(1-0.05, StaticFunctions.getK(arr[0].size())-1, arr[0].size()-StaticFunctions.getK(arr[0].size()))){
+                        modelCoefCorr.setValueAt("Не значимый", 1, 4);
+                    }else{
+                        modelCoefCorr.setValueAt("Значимый", 1, 4);
+                    }
+                    modelCoefCorr.setValueAt(f.format(StaticFunctions.spirmenCoef(arr[0].toArrayDouble(0), arr[1].toArrayDouble(0))), 2, 1);
+                    modelCoefCorr.setValueAt(f.format(StaticFunctions.statisticsSpirmen(arr[0].toArrayDouble(0), arr[1].toArrayDouble(0))), 2, 2);
+                    modelCoefCorr.setValueAt(f.format(Quantiles.Student(1-0.05/2, arr[0].size()-2)), 2, 3);
+                    if(Math.abs(StaticFunctions.statisticsSpirmen(arr[0].toArrayDouble(0), arr[1].toArrayDouble(0)))<=Quantiles.Student(1-0.05/2, arr[0].size()-2)){
+                        modelCoefCorr.setValueAt("Не значимый", 2, 4);
+                    }else{
+                        modelCoefCorr.setValueAt("Значимый", 2, 4);
+                    }
+                    modelCoefCorr.setValueAt(f.format(StaticFunctions.kendallsCoef(arr[0].toArrayDouble(0), arr[1].toArrayDouble(0))), 3, 1);
+                    modelCoefCorr.setValueAt(f.format(StaticFunctions.staticticsKendall(arr[0].toArrayDouble(0), arr[1].toArrayDouble(0))), 3, 2);
+                    modelCoefCorr.setValueAt(f.format(Quantiles.Norm(1-0.05/2)), 3, 3);
+                    if(Math.abs(StaticFunctions.staticticsKendall(arr[0].toArrayDouble(0), arr[1].toArrayDouble(0)))<=Quantiles.Norm(1-0.05/2)){
+                        modelCoefCorr.setValueAt("Не значимый", 3, 4);
+                    }else{
+                        modelCoefCorr.setValueAt("Значимый", 3, 4);
+                    }
+                    
+                    /*Show estemate parametrs*/
+                    modelEstem.setValueAt(f.format(StaticFunctions.estimateA(arr[0], arr[1])), 0, 1);
+                    modelEstem.setValueAt(f.format(Quantiles.Student(1-0.05/2, arr[0].size()-2)), 0, 4);
+                    modelEstem.setValueAt(f.format(StaticFunctions.estimateB(arr[0], arr[1])), 1, 1);
+                    modelEstem.setValueAt(f.format(Quantiles.Student(1-0.05/2, arr[0].size()-2)), 1, 4);
+                    
                 }else{
                     arr[0]=null;
                     arr[1]=null;
@@ -215,6 +286,9 @@ public class MainWindow extends javax.swing.JFrame {
     OrderedSeries[] arr = new OrderedSeries[2];
     JFreeChart chart;
     DefaultTableModel modelStatistic;
+    DefaultTableModel modelCoefCorr;
+    DefaultTableModel modelEstem;
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JFileChooser jFileChooser1;
     private javax.swing.JMenu jMenu1;
@@ -225,7 +299,11 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPnlChart;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTable jTable1;
+    private javax.swing.JTable jTable2;
     private javax.swing.JTable jTblStatistic;
     // End of variables declaration//GEN-END:variables
 
