@@ -1,10 +1,15 @@
 package correlation.and.regression.analysis;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import jsc.correlation.KendallCorrelation;
 import jsc.datastructures.PairedData;
+import org.apache.commons.math3.distribution.TDistribution;
 import org.apache.commons.math3.stat.correlation.SpearmansCorrelation;
+
+import org.jfree.data.xy.XYSeries;
 
 public class StaticFunctions {
    // static specialFunctions spFunc = new specialFunctions();
@@ -17,6 +22,7 @@ public class StaticFunctions {
         double ySquareMean = Y.meanSquare(yMean);
         return (xyMean-(xMean*yMean))/(xSquareMean*ySquareMean);
     }
+    
     
     public static double significancePairCor(OrderedSeries X, OrderedSeries Y){
         double N = X.size();
@@ -58,6 +64,11 @@ public class StaticFunctions {
         return correlation.correlation(X, Y);
     }
     
+    public static double tDistrib(double nu){
+        TDistribution distribution = new TDistribution(nu);
+        return distribution.cumulativeProbability(1-0.05/2);
+    }
+    
     public static double statisticsSpirmen(double[] X, double[] Y){
         double spirmen = spirmenCoef(X, Y);
         return (spirmen*Math.pow(X.length-2, 0.5))/(Math.pow(1-Math.pow(spirmen, 2), 0.5));
@@ -87,7 +98,7 @@ public class StaticFunctions {
     public static double estimateA(OrderedSeries X, OrderedSeries Y){
         double numerator = y_mean(Y)*X.meanSq()-X.mean()*xy_mean(X, Y);
         double denominator = X.meanSq()-Math.pow(X.mean(), 2);
-        return numerator/denominator;
+        return Math.log(Math.exp(numerator/denominator));
     }
     
     public static double estimateB(OrderedSeries X, OrderedSeries Y){
@@ -96,7 +107,262 @@ public class StaticFunctions {
         return numerator/denominator;
     }
     
+    public static XYSeries drawRegressionLine(OrderedSeries X, OrderedSeries Y){
+        double a = estimateA(X, Y);
+        double b = estimateB(X, Y);
+        //double point = X.min();
+        //double max = X.max();
+        //double step = (max-point)/100.0;
+        XYSeries res = new XYSeries("Regresion");
+       // while(point<=max){
+            for(int i=0; i<X.size(); i++){
+                res.add(X.getNumber(i), regression(X.getNumber(i), a, b));
+            }
+            //res.add(point, regression(point, a, b));
+           // point+=step;
+       // }
+        res.setDescription("Regression Line");
+        return res;
+    }
+    
+    public static XYSeries drawConfidenceIntervalMin(OrderedSeries X, OrderedSeries Y){
+        double a = estimateA(X, Y);
+        double b = estimateB(X, Y);
+        double st = Quantiles.Student(1-0.05/2, X.size()-2);
+        //double point = X.min();
+        //double max = X.max();
+        //double step = (max-point)/100.0;
+        XYSeries res = new XYSeries("ConfidenceIntervalForRegMin");
+       // while(point<=max){
+            for(int i=0; i<X.size(); i++){
+                //res.add(X.getNumber(i), regression(X.getNumber(i), a, b)-st*getSy(X.getNumber(i), X, Y));
+                res.add(X.getNumber(i), getZSmin(X.getNumber(i), a, b, st, getSy(X.getNumber(i), X, Y)));
+            }
+            //res.add(point, regression(point, a, b));
+           // point+=step;
+       // }
+        res.setDescription("ConfidenceIntervalMin");
+        return res;
+    }
+    
+           private static double getZSmin(double x, double a, double b, double t, double S){
+           return Math.exp(a+b*x-t*S);
+       }
+       
+       private static double getZSmax(double x, double a, double b, double t, double S){
+           return Math.exp(a+b*x+t*S);
+       }
+    
+        public static XYSeries drawConfidenceIntervalMax(OrderedSeries X, OrderedSeries Y){
+        double a = estimateA(X, Y);
+        double b = estimateB(X, Y);
+        double st = Quantiles.Student(1-0.05/2, X.size()-2);
+        //double point = X.min();
+        //double max = X.max();
+        //double step = (max-point)/100.0;
+        XYSeries res = new XYSeries("ConfidenceIntervalForRegMax");
+       // while(point<=max){
+            for(int i=0; i<X.size(); i++){
+                //res.add(X.getNumber(i), regression(X.getNumber(i), a, b)+st*getSy(X.getNumber(i), X, Y));
+                res.add(X.getNumber(i), getZSmax(X.getNumber(i), a, b, st, getSy(X.getNumber(i), X, Y)));
+            }
+            //res.add(point, regression(point, a, b));
+           // point+=step;
+       // }
+        res.setDescription("ConfidenceIntervalForRegMax");
+        return res;
+    }
+        
+            public static XYSeries drawConfidence2IntervalMin(OrderedSeries X, OrderedSeries Y){
+        double a = estimateA(X, Y);
+        double b = estimateB(X, Y);
+        double st = Quantiles.Student(1-0.05/2, X.size()-2);
+        //double point = X.min();
+        //double max = X.max();
+        //double step = (max-point)/100.0;
+        XYSeries res = new XYSeries("ConfidenceForNewValueIntervalMin");
+       // while(point<=max){
+            for(int i=0; i<X.size(); i++){
+                res.add(X.getNumber(i), getZSymin(X.getNumber(i), a, b, st, getS(X.getNumber(i), X, Y)));
+                //res.add(X.getNumber(i), regression(X.getNumber(i), a, b)-st*getS(X.getNumber(i), X, Y));
+            }
+            //res.add(point, regression(point, a, b));
+           // point+=step;
+       // }
+        //res.setDescription("ConfidenceIntervalMin");
+        return res;
+    }
+            private static double getZSymin(double x, double a, double b, double t, double S){
+           return Math.exp(a+b*x-t*S);
+       }
+       
+       private static double getZSymax(double x, double a, double b, double t, double S){
+           return Math.exp(a+b*x+t*S);
+       }
+    
+        public static XYSeries drawConfidence2IntervalMax(OrderedSeries X, OrderedSeries Y){
+        double a = estimateA(X, Y);
+        double b = estimateB(X, Y);
+        double st = Quantiles.Student(1-0.05/2, X.size()-2);
+        //double point = X.min();
+        //double max = X.max();
+        //double step = (max-point)/100.0;
+        XYSeries res = new XYSeries("ConfidenceIntervalForNewValueMax");
+    
+       // while(point<=max){
+            for(int i=0; i<X.size(); i++){
+                //res.add(X.getNumber(i), regression(X.getNumber(i), a, b)+st*getS(X.getNumber(i), X, Y));
+                res.add(X.getNumber(i), getZSymax(X.getNumber(i), a, b, st, getS(X.getNumber(i), X, Y)));
+            }
+            //res.add(point, regression(point, a, b));
+           // point+=step;
+       // }
+       // res.setDescription("ConfidenceIntervalMax");
+        return res;
+    }
+        
+          public static XYSeries drawTolerantIntervalMax(OrderedSeries X, OrderedSeries Y){
+        double a = estimateA(X, Y);
+        double b = estimateB(X, Y);
+        double st = Quantiles.Student(1-0.05/2, X.size()-2);
+        double S = S_residual(X, Y);
+        //double t = st*Math.sqrt(S_residual(X, Y));
+        //double point = X.min();
+        //double max = X.max();
+        //double step = (max-point)/100.0;
+        XYSeries res = new XYSeries("TolerantIntervalMax");
+            for(int i=0; i<X.size(); i++){
+                res.add(X.getNumber(i), getZmax(X.getNumber(i), a, b, st, S));
+                //res.add(X.getNumber(i), regression(X.getNumber(i), a, b)+t);
+            }
+      
+        res.setDescription("TolerantIntervalMax");
+        return res;
+    }
+          
+       private static double getZmin(double x, double a, double b, double t, double S){
+           return Math.exp(a+b*x-t*Math.sqrt(S));
+       }
+       
+       private static double getZmax(double x, double a, double b, double t, double S){
+           return Math.exp(a+b*x+t*Math.sqrt(S));
+       }
+          
+            public static XYSeries drawTolerantIntervalMin(OrderedSeries X, OrderedSeries Y){
+        double a = estimateA(X, Y);
+        double b = estimateB(X, Y);
+        double st = Quantiles.Student(1-0.05/2, X.size()-2);
+        double S = S_residual(X, Y);
+        double t = st*Math.sqrt(S_residual(X, Y));
+        //double point = X.min();
+        //double max = X.max();
+        //double step = (max-point)/100.0;
+        XYSeries res = new XYSeries("TolerantIntervalMin");
+       // while(point<=max){
+            for(int i=0; i<X.size(); i++){
+                res.add(X.getNumber(i), getZmin(X.getNumber(i),a,b,st, S));
+                //res.add(X.getNumber(i), regression(X.getNumber(i), a, b)-t);
+            }
+            //res.add(point, regression(point, a, b));
+           // point+=step;
+       // }
+        res.setDescription("TolerantIntervalMin");
+        return res;
+    }
+    
+    private static double getS(double x, OrderedSeries X, OrderedSeries Y){
+        return Math.sqrt(S_residual(X, Y)*(1+1/(double)X.size())+Math.pow(Sb(X, Y), 2)*Math.pow(x-X.mean(), 2));
+    }
+    
+    private static double getSy(double x, OrderedSeries X, OrderedSeries Y){
+           
+        return Math.sqrt(S_residual(X, Y)/(double)X.size()+Math.pow(Sb(X, Y), 2)*Math.pow(x-X.mean(), 2));//*(1+1/(double)X.size()+Math.pow(x-X.mean(), 2)/(double)X.size()*(X.meanSq()-Math.pow(X.mean(), 2)));
+    }
+    
+    public static double Sa(OrderedSeries X, OrderedSeries Y){
+      
+        double res = Math.sqrt(S_residual(X, Y))*Math.sqrt((1/(double)X.size())+(Math.pow(X.mean(), 2)/(X.unbiasedEstimator()*(X.size()-1))));
+        //System.out.println("Sa "+res);
+        return res;
+    }
+    
+    public static double Sb(OrderedSeries X, OrderedSeries Y){
+             double res = Math.sqrt(S_residual(X, Y))/(Math.sqrt(X.unbiasedEstimator())*Math.sqrt(X.size()-1));
+        //System.out.println("Sb "+res);
+        return res;
+    }
+    
+    public static double dispersiaA(OrderedSeries X, OrderedSeries Y){  
+        return S_residual(X, Y)*(1.0/(double)X.size()+Math.pow(X.mean(), 2)/(X.size()*(X.meanSq()-Math.pow(X.mean(), 2))));
+    }
+    
+    public static double dispersiaB(OrderedSeries X, OrderedSeries Y){  
+        return S_residual(X, Y)/(double)(X.size()*(X.meanSq()-Math.pow(X.mean(), 2)));
+    }
+    
+    public static String getIntervalForEstemateA(OrderedSeries X, OrderedSeries Y){
+        NumberFormat f = NumberFormat.getInstance();
+        f.setGroupingUsed(false);
+        double a = estimateA(X, Y);
+        double sec = Quantiles.Student(1-0.05/2, X.size()-2)*Sa(X, Y);
+        double fir = a-sec;
+        double s = a+sec;
+        return new String("["+f.format(fir)+":"+f.format(s)+"]");
+    }
+    
+    public static String getIntervalForEstemateB(OrderedSeries X, OrderedSeries Y){
+        NumberFormat f = NumberFormat.getInstance();
+        f.setGroupingUsed(false);
+        double b = estimateB(X, Y);
+        double sec = Quantiles.Student(1-0.05/2.0, X.size()-2)*Sb(X, Y);
+        double fir = b-sec;
+        double s = b+sec;
+        return new String("["+f.format(fir)+":"+f.format(s)+"]");
+    }
+    
+    public static double S_residual(OrderedSeries X, OrderedSeries Y){
+        double sum = 0;
+        double a = estimateA(X, Y);
+        double b = estimateB(X, Y);
+        for(int i=0; i<X.size(); i++){
+            sum+=Math.pow(funcY(Y.getNumber(i))-a-b*X.getNumber(i), 2);
+            //sum+=Math.pow(Y.getNumber(i)-a-b*X.getNumber(i), 2);
+        }
+        //System.out.println("S_resideul "+sum/(double)(X.size()-2));
+        return roundResult(sum/(double)(X.size()-2), 6);
+    }
+    
+    public static String significanceA(OrderedSeries X, OrderedSeries Y){
+        if(statisticA(X, Y)<=Quantiles.Student(1-0.05/2, X.size()-2)){
+            return "Не значимый";
+        }else{
+            return "Значимый";
+        }
+    }
+    
+    public static double statisticA(OrderedSeries X, OrderedSeries Y){
+        return Math.abs(estimateA(X, Y))/Sa(X, Y);
+    }
+    
+    public static double statisticB(OrderedSeries X, OrderedSeries Y){
+        return Math.abs(estimateB(X, Y))/Sb(X, Y);
+    }
+    
+    public static String significanceB(OrderedSeries X, OrderedSeries Y){
+        if(statisticB(X, Y)<=Quantiles.Student(1-0.05/2, X.size()-2)){
+            return "Не значимый";
+        }else{
+            return "Значимый";
+        }
+    }
+    
+    public static double regression(double x, double a, double b){
+        //return a*Math.exp(b*x);
+        return Math.exp(a+b*x);
+    }
+    
     private static double funcY(double x){
+        //return Math.exp(x);
         return Math.log(x);
     }
     
@@ -161,6 +427,25 @@ public class StaticFunctions {
             res.add(row);
         }
         return res;
+    }
+    
+    public static double getFtest(OrderedSeries X, OrderedSeries Y){
+        double sum=0;
+        double a = estimateA(X, Y);
+        double b = estimateB(X, Y);
+        double y_m = Y.mean();
+        for(int i=0; i<X.size(); i++){
+            sum+=Math.pow(regression(X.getNumber(i), a, b)-y_m, 2);
+        }
+        return sum/S_residual(X, Y);
+    }
+    
+    
+    static double roundResult (double d, int precise) {
+        precise = 10^precise;
+        d = d*precise;
+        int i = (int) Math.round(d);
+        return (double) i/precise;
     }
     
     

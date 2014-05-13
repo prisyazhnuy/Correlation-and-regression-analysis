@@ -47,7 +47,7 @@ public class OrderedSeries {
                 max=Math.abs(data.get(i).emprDistrib-func);
             }
         }
-        System.out.println("Max= "+max);
+        //System.out.println("Max= "+max);
         return max;
     }
     
@@ -196,26 +196,26 @@ public class OrderedSeries {
         Boolean flag = false;
         while(buffile.ready()){
             tmp=buffile.readLine();
-            String[] str = tmp.split("\\s+");
-            for(int i=0; i<str.length; i++){
-                array.add(Double.parseDouble(str[i]));
-                for(int j=0; j<=data.size(); j++){
-                    if(j==data.size()){
-                        data.add(new Count(Float.parseFloat(str[i])));
+            //String[] str = tmp.split("\\s+");
+            //for(int i=0; i<str.length; i++){
+                array.add(Double.parseDouble(tmp));
+              ///  for(int j=0; j<=data.size(); j++){
+                 //   if(j==data.size()){
+                        data.add(new Count(Float.parseFloat(tmp)));
                         countOfNumbers++;
-                        break;
-                    }else{
-                        if(data.get(j).number==Float.parseFloat(str[i])){
-                            data.get(j).count++;
-                            countOfNumbers++;
-                            break;
-                        }
-                    }
-                }
+                   //     break;
+                   // }else{
+                     //   if(data.get(j).number==Float.parseFloat(str[i])){
+                       //     data.get(j).count++;
+                         //   countOfNumbers++;
+                          //  break;
+                        //}
+                    //}
+               // }
                 
-            }
-        }
-        System.out.println("N="+data.size());
+          //  }
+       }
+        //System.out.println("N="+data.size());
         //sort(0,data.size()-1);
         //relatFreg();
         //emprDistrib();
@@ -571,6 +571,16 @@ public class OrderedSeries {
             else count+=c.count;
         }
         return countOfNumbers-count;
+    }
+    
+    public double unbiasedEstimator(){
+        double sum = 0;
+        double mean = mean();
+        for(Count c : data){
+            sum+=Math.pow(c.number-mean, 2);
+        }
+        //System.out.println("несмищенная "+sum/(size()-1));
+        return sum/(double)(size()-1);
     }
     
     public boolean odnorodnost2(DefaultTableModel model){

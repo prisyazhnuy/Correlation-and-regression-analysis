@@ -14,6 +14,7 @@ import javax.swing.table.DefaultTableModel;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
@@ -45,7 +46,7 @@ public class MainWindow extends javax.swing.JFrame {
         jFileChooser1 = new javax.swing.JFileChooser();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
-        jPnlChart = new javax.swing.JPanel();
+        jSPanelChart = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTblStatistic = new javax.swing.JTable();
@@ -53,6 +54,11 @@ public class MainWindow extends javax.swing.JFrame {
         jTable1 = new javax.swing.JTable();
         jScrollPane3 = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
+        jLabel1 = new javax.swing.JLabel();
+        jLabelDet = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabelFtest = new javax.swing.JLabel();
+        jLabelRes = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -60,31 +66,29 @@ public class MainWindow extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        javax.swing.GroupLayout jPnlChartLayout = new javax.swing.GroupLayout(jPnlChart);
-        jPnlChart.setLayout(jPnlChartLayout);
-        jPnlChartLayout.setHorizontalGroup(
-            jPnlChartLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 566, Short.MAX_VALUE)
+        javax.swing.GroupLayout jSPanelChartLayout = new javax.swing.GroupLayout(jSPanelChart);
+        jSPanelChart.setLayout(jSPanelChartLayout);
+        jSPanelChartLayout.setHorizontalGroup(
+            jSPanelChartLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 607, Short.MAX_VALUE)
         );
-        jPnlChartLayout.setVerticalGroup(
-            jPnlChartLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 149, Short.MAX_VALUE)
+        jSPanelChartLayout.setVerticalGroup(
+            jSPanelChartLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 428, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPnlChart, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jSPanelChart, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jPnlChart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 198, Short.MAX_VALUE))
+            .addComponent(jSPanelChart, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        jTabbedPane1.addTab("tab1", jPanel1);
+        jTabbedPane1.addTab("График", jPanel1);
 
         modelStatistic = new DefaultTableModel(
             new Object [][] {
@@ -121,6 +125,10 @@ public class MainWindow extends javax.swing.JFrame {
         jTable2.setModel(modelEstem);
         jScrollPane3.setViewportView(jTable2);
 
+        jLabel1.setText("Коэфициент детерминации:");
+
+        jLabel2.setText("f:");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -128,9 +136,22 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 546, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 587, Short.MAX_VALUE)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane3))
+                    .addComponent(jScrollPane3)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabelDet))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabelFtest)
+                                .addGap(70, 70, 70)
+                                .addComponent(jLabelRes)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -140,11 +161,20 @@ public class MainWindow extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 64, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabelDet))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabelFtest)
+                    .addComponent(jLabelRes))
+                .addContainerGap(22, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab("tab2", jPanel2);
+        jTabbedPane1.addTab("Оценки", jPanel2);
 
         jMenu1.setText("Файл");
 
@@ -214,8 +244,8 @@ public class MainWindow extends javax.swing.JFrame {
                     }
                     modelCoefCorr.setValueAt(f.format(StaticFunctions.spirmenCoef(arr[0].toArrayDouble(0), arr[1].toArrayDouble(0))), 2, 1);
                     modelCoefCorr.setValueAt(f.format(StaticFunctions.statisticsSpirmen(arr[0].toArrayDouble(0), arr[1].toArrayDouble(0))), 2, 2);
-                    modelCoefCorr.setValueAt(f.format(Quantiles.Student(1-0.05/2, arr[0].size()-2)), 2, 3);
-                    if(Math.abs(StaticFunctions.statisticsSpirmen(arr[0].toArrayDouble(0), arr[1].toArrayDouble(0)))<=Quantiles.Student(1-0.05/2, arr[0].size()-2)){
+                    modelCoefCorr.setValueAt(f.format(StaticFunctions.tDistrib(arr[0].size()-2)), 2, 3);
+                    if(Math.abs(StaticFunctions.statisticsSpirmen(arr[0].toArrayDouble(0), arr[1].toArrayDouble(0)))<=StaticFunctions.tDistrib(arr[0].size()-2)){
                         modelCoefCorr.setValueAt("Не значимый", 2, 4);
                     }else{
                         modelCoefCorr.setValueAt("Значимый", 2, 4);
@@ -230,10 +260,37 @@ public class MainWindow extends javax.swing.JFrame {
                     }
                     
                     /*Show estemate parametrs*/
-                    modelEstem.setValueAt(f.format(StaticFunctions.estimateA(arr[0], arr[1])), 0, 1);
+                    modelEstem.setValueAt(StaticFunctions.estimateA(arr[0], arr[1]), 0, 1);
+                    modelEstem.setValueAt(f.format(StaticFunctions.dispersiaA(arr[0], arr[1])), 0, 2);
+                    modelEstem.setValueAt(f.format(StaticFunctions.statisticA(arr[0], arr[1])), 0, 3);
                     modelEstem.setValueAt(f.format(Quantiles.Student(1-0.05/2, arr[0].size()-2)), 0, 4);
-                    modelEstem.setValueAt(f.format(StaticFunctions.estimateB(arr[0], arr[1])), 1, 1);
+                    modelEstem.setValueAt(StaticFunctions.significanceA(arr[0], arr[1]), 0, 5);
+                    modelEstem.setValueAt(StaticFunctions.getIntervalForEstemateA(arr[0], arr[1]), 0, 6);
+                    modelEstem.setValueAt(StaticFunctions.estimateB(arr[0], arr[1]), 1, 1);
+                    modelEstem.setValueAt(f.format(StaticFunctions.dispersiaB(arr[0], arr[1])), 1, 2);
+                    modelEstem.setValueAt(f.format(StaticFunctions.statisticB(arr[0], arr[1])), 1, 3);
                     modelEstem.setValueAt(f.format(Quantiles.Student(1-0.05/2, arr[0].size()-2)), 1, 4);
+                    modelEstem.setValueAt(StaticFunctions.significanceB(arr[0], arr[1]), 1, 5);
+                    modelEstem.setValueAt(StaticFunctions.getIntervalForEstemateB(arr[0], arr[1]), 1, 6);
+                    
+                    double[] tmp = new double[arr[0].size()];
+                    double a = StaticFunctions.estimateA(arr[0], arr[1]);
+                    double b = StaticFunctions.estimateB(arr[0], arr[1]);
+                    for(int i=0; i<arr[0].size(); i++){
+                        tmp[i]=StaticFunctions.regression(arr[0].getNumber(i), a, b);
+                    }
+                    OrderedSeries t = new OrderedSeries();
+                    t.loadFromArray(tmp);
+                    
+                    jLabelDet.setText(f.format(Math.pow(StaticFunctions.pairCorrelationCoef(arr[0], t), 2)*100));
+                    
+                    jLabelFtest.setText(""+f.format(StaticFunctions.getFtest(arr[0], arr[1])));
+                    
+                    if(StaticFunctions.getFtest(arr[0], arr[1])>Math.pow(Quantiles.Student(1-0.05/2, arr[0].size()-2), 2)){
+                        jLabelRes.setText("Регрессия значима");
+                    }else{
+                        jLabelRes.setText("Регрессия не значима");
+                    }
                     
                 }else{
                     arr[0]=null;
@@ -288,16 +345,22 @@ public class MainWindow extends javax.swing.JFrame {
     DefaultTableModel modelStatistic;
     DefaultTableModel modelCoefCorr;
     DefaultTableModel modelEstem;
+    ChartPanel ChP;
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JFileChooser jFileChooser1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabelDet;
+    private javax.swing.JLabel jLabelFtest;
+    private javax.swing.JLabel jLabelRes;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPnlChart;
+    private javax.swing.JPanel jSPanelChart;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
@@ -308,30 +371,61 @@ public class MainWindow extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private void clearAll() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     private void showCorrelationField() {
         XYSeriesCollection dataset = new XYSeriesCollection();
-        
+        XYSeries correlation = new XYSeries("Correlation Field");
          for(int i=0; i<arr[0].countOfNumbers; i++){
-             XYSeries tmp = new XYSeries(""+i);
-             tmp.add(arr[0].getNumber(i), arr[1].getNumber(i));
-             tmp.add(arr[0].getNumber(i), arr[1].getNumber(i));
-             dataset.addSeries(tmp);
-         }       
-        JFreeChart chart = ChartFactory.createXYLineChart("Relation", "X", "Y", dataset, PlotOrientation.VERTICAL, false, false, false);
-        XYPlot plot = chart.getXYPlot();
-        XYLineAndShapeRenderer renderer = (XYLineAndShapeRenderer) plot.getRenderer();
-        for(int i=0;i<arr[0].countOfNumbers;i++)
-            renderer.setSeriesPaint(i, Color.BLUE);
-        plot.setBackgroundPaint(Color.WHITE);
-        plot.setRangeGridlinePaint(Color.LIGHT_GRAY);
-            ChartPanel ChP = new ChartPanel(chart);
-            ChP.setSize(jPnlChart.getWidth(), jPnlChart.getHeight());
-            jPnlChart.removeAll();
-	    jPnlChart.revalidate();
-	    jPnlChart.add(ChP);
-	    jPnlChart.repaint();
+             //XYSeries tmp = new XYSeries(""+i);
+             correlation.add(arr[0].getNumber(i), arr[1].getNumber(i));
+             //tmp.add(arr[0].getNumber(i), arr[1].getNumber(i));
+             //dataset.addSeries(tmp);
+         } 
+         dataset.addSeries(correlation);
+         XYSeries regr = StaticFunctions.drawRegressionLine(arr[0], arr[1]);
+         dataset.addSeries(regr);
+         
+         XYSeries ConfidenceIntervalMax = StaticFunctions.drawConfidenceIntervalMax(arr[0], arr[1]);
+         dataset.addSeries(ConfidenceIntervalMax);
+        XYSeries ConfidenceIntervalMin = StaticFunctions.drawConfidenceIntervalMin(arr[0], arr[1]);
+        dataset.addSeries(ConfidenceIntervalMin);
+        
+        XYSeries Confidence2IntervalMax = StaticFunctions.drawConfidence2IntervalMax(arr[0], arr[1]);
+         dataset.addSeries(Confidence2IntervalMax);
+        XYSeries Confidence2IntervalMin = StaticFunctions.drawConfidence2IntervalMin(arr[0], arr[1]);
+        dataset.addSeries(Confidence2IntervalMin);
+        
+        XYSeries TolerantIntervalMax = StaticFunctions.drawTolerantIntervalMax(arr[0], arr[1]);
+         dataset.addSeries(TolerantIntervalMax);
+        XYSeries TolerantIntervalMin = StaticFunctions.drawTolerantIntervalMin(arr[0], arr[1]);
+        dataset.addSeries(TolerantIntervalMin);
+         JFreeChart chart = ChartFactory.createXYLineChart("Relation", "X", "Y", dataset, PlotOrientation.VERTICAL, true, true, false);      
+          // NOW DO SOME OPTIONAL CUSTOMISATION OF THE CHART...
+        chart.setBackgroundPaint(Color.white);
+        final XYPlot plot = chart.getXYPlot();
+        plot.setBackgroundPaint(Color.lightGray);
+        plot.setDomainGridlinePaint(Color.white);
+        plot.setRangeGridlinePaint(Color.white);
+        
+        final XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
+        renderer.setSeriesLinesVisible(0, false);
+        renderer.setSeriesShapesVisible(1, false);
+        renderer.setSeriesShapesVisible(2, false);
+        renderer.setSeriesShapesVisible(3, false);
+        renderer.setSeriesShapesVisible(4, false);
+        renderer.setSeriesShapesVisible(5, false);
+        plot.setRenderer(renderer);
+
+        // change the auto tick unit selection to integer units only...
+        final NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
+        rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+        ChP = new ChartPanel(chart);
+        ChP.setSize(jSPanelChart.getWidth(), jSPanelChart.getHeight());
+        jSPanelChart.removeAll();
+	jSPanelChart.revalidate();
+	jSPanelChart.add(ChP);
+	jSPanelChart.repaint();
     }
 }
